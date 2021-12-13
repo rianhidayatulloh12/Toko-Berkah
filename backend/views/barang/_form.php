@@ -12,7 +12,9 @@ use yii\bootstrap4\ActiveForm;
 
 <div class="barang-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+            'options' => ['enctype' => 'multipart/form-data']
+    ]); ?>
 
     <?= $form->field($model, 'nama')->textInput(['maxlength' => true]) ?>
 
@@ -31,7 +33,10 @@ use yii\bootstrap4\ActiveForm;
 
     <?= $form->field($model, 'satuan')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'stok')->textInput() ?>
+    <?= $form->field($model, 'stok')->textInput([
+        'maxlength' => true,
+        'type' => 'number'
+    ]) ?>
 
     <?= $form->field($model, 'deskripsi')->widget(CKEditor::className(),
         [
@@ -69,7 +74,7 @@ use yii\bootstrap4\ActiveForm;
         ]
     ); ?>
 
-    <?= $form->field($model, 'image', [
+    <?= $form->field($model, 'imageFile', [
             'template' =>
                 '
                     <div class="custom-file">
