@@ -1,5 +1,7 @@
 <?php
 
+
+use Itstructure\CKEditor\CKEditor;
 use yii\helpers\Html;
 use yii\bootstrap4\ActiveForm;
 
@@ -12,15 +14,18 @@ use yii\bootstrap4\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <?= $form->field($model, 'nama')->textInput(['maxlength' => true]) ?>
+
     <?= $form->field($model, 'sku')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'upc')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'nama')->textInput(['maxlength' => true]) ?>
-
     <?= $form->field($model, 'jenis')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'harga_jual')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'harga_jual')->textInput([
+            'maxlength' => true,
+            'type' => 'number'
+    ]) ?>
 
     <?= $form->field($model, 'merk')->textInput(['maxlength' => true]) ?>
 
@@ -28,11 +33,56 @@ use yii\bootstrap4\ActiveForm;
 
     <?= $form->field($model, 'stok')->textInput() ?>
 
-    <?= $form->field($model, 'status')->textInput() ?>
+    <?= $form->field($model, 'deskripsi')->widget(CKEditor::className(),
+        [
+            'preset' => 'custom',
+            'clientOptions' => [
+                'toolbarGroups' => [
+                    [
+                        'name' => 'undo'
+                    ],
+                    [
+                        'name' => 'basicstyles',
+                        'groups' => ['basicstyles', 'cleanup']
+                    ],
+                    [
+                        'name' => 'colors'
+                    ],
+                    [
+                        'name' => 'links',
+                        'groups' => ['links', 'insert']
+                    ],
+                    [
+                        'name' => 'others',
+                        'groups' => ['others', 'about']
+                    ],
+                ],
+                'filebrowserBrowseUrl' => '/ckfinder/ckfinder.html',
+                'filebrowserImageBrowseUrl' => '/ckfinder/ckfinder.html?type=Images',
+                'filebrowserUploadUrl' => '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+                'filebrowserImageUploadUrl' => '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+                'filebrowserWindowWidth' => '1000',
+                'filebrowserWindowHeight' => '700',
+                'allowedContent' => true,
+                'language' => 'en',
+            ]
+        ]
+    ); ?>
 
-    <?= $form->field($model, 'image')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'image', [
+            'template' =>
+                '
+                    <div class="custom-file">
+                    {input}
+                    {label}
+                    {error}
+                    </div>
+                ',
+            'labelOptions' => ['class' => 'custom-file-label'],
+            'inputOptions' => ['class' => 'custom-file-input']
+    ])->textInput(['type' => 'file']) ?>
 
-    <?= $form->field($model, 'deskripsi')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'status')->checkbox() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

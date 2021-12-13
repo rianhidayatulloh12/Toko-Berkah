@@ -56,15 +56,15 @@ class Barang extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'nama' => 'Nama',
             'sku' => 'Sku',
             'upc' => 'Upc',
-            'nama' => 'Nama',
             'jenis' => 'Jenis',
             'harga_jual' => 'Harga Jual',
             'merk' => 'Merk',
             'satuan' => 'Satuan',
             'stok' => 'Stok',
-            'status' => 'Status',
+            'status' => 'Published',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',
