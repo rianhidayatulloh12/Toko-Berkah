@@ -181,15 +181,15 @@ AppAsset::register($this);
 <!--                        </div>-->
 <!--                    </li>-->
 <!---->
-<!--                    <!-- Nav Item - Messages -->-->
+                    <!-- Nav Item - Messages -->
 <!--                    <li class="nav-item dropdown no-arrow mx-1">-->
 <!--                        <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"-->
 <!--                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
 <!--                            <i class="fas fa-envelope fa-fw"></i>-->
-<!--                            <!-- Counter - Messages -->-->
+                            <!-- Counter - Messages -->
 <!--                            <span class="badge badge-danger badge-counter">7</span>-->
 <!--                        </a>-->
-<!--                        <!-- Dropdown - Messages -->-->
+                        <!-- Dropdown - Messages -->
 <!--                        <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"-->
 <!--                             aria-labelledby="messagesDropdown">-->
 <!--                            <h6 class="dropdown-header">-->
@@ -298,7 +298,7 @@ AppAsset::register($this);
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
                 <div class="copyright text-center my-auto">
-                    <span>Copyright &copy; Your Website 2021</span>
+                    <span>Copyright &copy; Toko Berkah</span>
                 </div>
             </div>
         </footer>

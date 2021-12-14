@@ -27,10 +27,16 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
 
-            'id',
             [
-                'attribute' => 'image',
-                'content' => function($model) {
+                    'attribute' => 'id',
+                    'contentOptions' => [
+                            'style' => 'width: 60px'
+                    ]
+            ],
+            [
+                    'label' => 'Image',
+                    'attribute' => 'image',
+                    'content' => function($model) {
                     /** @var  \common\models\Barang $model */
                     return Html::img($model->getImageUrl(), ['style' => 'width: 50px']);
                 }
@@ -39,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
 //            'upc',
             'nama',
 //            'jenis',
-            'harga_jual:decimal',
+            'harga_jual',
 //            'merk',
             //'satuan',
             //'stok',
@@ -52,8 +58,16 @@ $this->params['breadcrumbs'][] = $this->title;
                     ]);
                     }
             ],
-            'created_at:datetime',
-            'updated_at:datetime',
+            [
+                    'attribute' => 'created_at',
+                    'format' => ['datetime'],
+                    'contentOptions' => ['style' => 'white-space: nowrap']
+            ],
+            [
+                    'attribute' => 'updated_at',
+                    'format' => ['datetime'],
+                    'contentOptions' => ['style' => 'white-space: nowrap']
+            ],
 //            'created_by',
             //'updated_by',
 
