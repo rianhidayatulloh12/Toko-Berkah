@@ -31,7 +31,7 @@ AppAsset::register($this);
         'brandLabel' => Yii::$app->name,
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
-            'class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top',
+            'class' => 'navbar navbar-expand-lg navbar-light bg-light',
         ],
     ]);
     $menuItems = [
@@ -53,7 +53,7 @@ AppAsset::register($this);
             . '</li>';
     }
     echo Nav::widget([
-        'options' => ['class' => 'navbar-nav'],
+        'options' => ['class' => 'navbar-nav ml-auto'],
         'items' => $menuItems,
     ]);
     NavBar::end();

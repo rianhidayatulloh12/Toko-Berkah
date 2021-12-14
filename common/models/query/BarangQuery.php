@@ -31,4 +31,12 @@ class BarangQuery extends \yii\db\ActiveQuery
     {
         return parent::one($db);
     }
+
+    /**
+     * @return BarangQuery
+     */
+    public function published()
+    {
+        return $this->andWhere(['status' => 1]);
+    }
 }
