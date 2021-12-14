@@ -6,7 +6,6 @@ use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\helpers\FileHelper;
-use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "{{%barang}}".
@@ -57,7 +56,7 @@ class Barang extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['sku', 'upc', 'nama', 'jenis', 'harga_jual', 'merk', 'satuan', 'stok', 'status', 'deskripsi'], 'required'],
+            [['sku', 'upc', 'nama', 'jenis', 'harga_jual', 'merk', 'satuan', 'stok', 'status',], 'required'],
             [['harga_jual'], 'number'],
             [['imageFile'], 'image', 'extensions'=> 'png, jpg, jpeg, gif, webp', 'maxSize' => 5 * 1024 * 1024],
             [['stok', 'status', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
@@ -100,6 +99,7 @@ class Barang extends \yii\db\ActiveRecord
     {
         return new \common\models\query\BarangQuery(get_called_class());
     }
+
     public function save($runValidation = true, $attributeNames = null)
     {
         if ($this->imageFile) {
@@ -109,21 +109,28 @@ class Barang extends \yii\db\ActiveRecord
         $transaction = Yii::$app->db->beginTransaction();
         $ok = parent::save($runValidation, $attributeNames);
 
-        if($ok) {
+        if($ok && $this->imageFile) {
             $fullPath = Yii::getAlias('@frontend/web/storage'.$this->image);
             $dir = dirname($fullPath);
             if(!FileHelper::createDirectory($dir) | !$this->imageFile->saveAs($fullPath)) {
                 $transaction->rollBack();
+
                 return false;
             }
-            $transaction->commit();
         }
+
+        $transaction->commit();
 
         return $ok;
     }
 
     public function getImageUrl()
+
     {
-        return Yii::$app->params['frontendUrl'] . '/storage'.$this->image;
+        if($this->image) {
+            return Yii::$app->params['frontendUrl'] . '/storage' . $this->image;
+        }
+        return Yii::$app->params['frontendUrl'].'/img/no_image.png';
     }
+
 }

@@ -10,7 +10,8 @@ return [
             'class' => 'yii\caching\FileCache',
         ],
         'formatter' => [
-            'datetimeFormat' => 'php:d/m/Y H:i'
+            'datetimeFormat' => 'php:d/m/Y H:i',
+            'currencyCode' => 'Rp.'
         ]
     ],
 ];

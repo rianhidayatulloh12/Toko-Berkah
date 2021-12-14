@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
 //            'upc',
             'nama',
 //            'jenis',
-            'harga_jual',
+            'harga_jual:currency',
 //            'merk',
             //'satuan',
             //'stok',
