@@ -25,7 +25,7 @@ $this->title = 'My Yii Application';
                             'layout' => '{summary}<div class="row">{items}</div>{pager}',
                             'itemView' => '_item_barang',
                             'itemOptions' => [
-                                    'class' => 'col mb-5'
+                                    'class' => 'col col-lg-3 mb-5'
                             ],
                             'pager' => [
                                     'class' => \yii\bootstrap4\LinkPager::class,
