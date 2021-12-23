@@ -8,18 +8,20 @@ use Yii;
  * This is the model class for table "{{%user_profile}}".
  *
  * @property int $id
- * @property string $nama
- * @property string $alamat
- * @property string $email
- * @property string $no_telp
- * @property string $jenis_kelamin
- * @property string $tanggal_lahir
  * @property int $user_id
- * @property string $kelurahan
- * @property string $kecamatan
- * @property string $kabupaten
- * @property string $provinsi
- * @property int $jenis_user
+ * @property string|null $nama
+ * @property string|null $alamat
+ * @property string|null $email
+ * @property string|null $no_telp
+ * @property string|null $jenis_kelamin
+ * @property string|null $tanggal_lahir
+ * @property string|null $kelurahan
+ * @property string|null $kecamatan
+ * @property string|null $kabupaten
+ * @property string|null $provinsi
+ * @property int|null $jenis_user
+ *
+ * @property User $user
  */
 class UserProfile extends \yii\db\ActiveRecord
 {
@@ -37,10 +39,11 @@ class UserProfile extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nama', 'alamat', 'email', 'no_telp', 'jenis_kelamin', 'tanggal_lahir', 'user_id', 'kelurahan', 'kecamatan', 'kabupaten', 'provinsi', 'jenis_user'], 'required'],
-            [['tanggal_lahir'], 'safe'],
+            [['user_id'], 'required'],
             [['user_id', 'jenis_user'], 'integer'],
+            [['tanggal_lahir'], 'safe'],
             [['nama', 'alamat', 'email', 'no_telp', 'jenis_kelamin', 'kelurahan', 'kecamatan', 'kabupaten', 'provinsi'], 'string', 'max' => 255],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -51,13 +54,13 @@ class UserProfile extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'user_id' => 'User ID',
             'nama' => 'Nama',
             'alamat' => 'Alamat',
             'email' => 'Email',
             'no_telp' => 'No Telp',
             'jenis_kelamin' => 'Jenis Kelamin',
             'tanggal_lahir' => 'Tanggal Lahir',
-            'user_id' => 'User ID',
             'kelurahan' => 'Kelurahan',
             'kecamatan' => 'Kecamatan',
             'kabupaten' => 'Kabupaten',
@@ -67,11 +70,21 @@ class UserProfile extends \yii\db\ActiveRecord
     }
 
     /**
+     * Gets query for [[User]].
+     *
+     * @return \yii\db\ActiveQuery|yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
+    /**
      * {@inheritdoc}
-     * @return \common\models\query\UserProfileQuery the active query used by this AR class.
+     * @return UserProfileQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \common\models\query\UserProfileQuery(get_called_class());
+        return new UserProfileQuery(get_called_class());
     }
 }

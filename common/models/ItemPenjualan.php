@@ -13,6 +13,9 @@ use Yii;
  * @property string $nama_barang
  * @property float $harga_barang
  * @property int $jumlah
+ *
+ * @property Barang $barang
+ * @property Penjualan $penjualan
  */
 class ItemPenjualan extends \yii\db\ActiveRecord
 {
@@ -34,6 +37,8 @@ class ItemPenjualan extends \yii\db\ActiveRecord
             [['penjualan_id', 'barang_id', 'jumlah'], 'integer'],
             [['harga_barang'], 'number'],
             [['nama_barang'], 'string', 'max' => 255],
+            [['barang_id'], 'exist', 'skipOnError' => true, 'targetClass' => Barang::className(), 'targetAttribute' => ['barang_id' => 'id']],
+            [['penjualan_id'], 'exist', 'skipOnError' => true, 'targetClass' => Penjualan::className(), 'targetAttribute' => ['penjualan_id' => 'id']],
         ];
     }
 
@@ -53,11 +58,31 @@ class ItemPenjualan extends \yii\db\ActiveRecord
     }
 
     /**
+     * Gets query for [[Barang]].
+     *
+     * @return \yii\db\ActiveQuery|BarangQuery
+     */
+    public function getBarang()
+    {
+        return $this->hasOne(Barang::className(), ['id' => 'barang_id']);
+    }
+
+    /**
+     * Gets query for [[Penjualan]].
+     *
+     * @return \yii\db\ActiveQuery|PenjualanQuery
+     */
+    public function getPenjualan()
+    {
+        return $this->hasOne(Penjualan::className(), ['id' => 'penjualan_id']);
+    }
+
+    /**
      * {@inheritdoc}
-     * @return \common\models\query\ItemPenjualanQuery the active query used by this AR class.
+     * @return ItemPenjualanQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \common\models\query\ItemPenjualanQuery(get_called_class());
+        return new ItemPenjualanQuery(get_called_class());
     }
 }
