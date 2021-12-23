@@ -14,4 +14,5 @@ return [
             'currencyCode' => 'Rp.'
         ]
     ],
+'language' => 'id-ID',
 ];
