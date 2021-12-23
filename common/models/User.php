@@ -24,12 +24,17 @@ use yii\web\IdentityInterface;
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $password write-only password
+ *
+ * @property \common\models\UserProfile[] $profiles
  */
 class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
+
+    public $password;
+    public $passwordConfirm;
 
 
     /**
@@ -56,6 +61,8 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
+            [['firstname', 'lastname', 'username', 'email'],'required'],
+            [['firstname', 'lastname', 'username', 'email'],'string', 'max' => 255],
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
         ];
@@ -213,9 +220,31 @@ class User extends ActiveRecord implements IdentityInterface
         $this->password_reset_token = null;
     }
 
+    /**
+     * @return string
+     * menampilkan full nama
+     */
     public  function getDisplayName()
     {
         $fullName = trim($this->firstname.' '.$this->lastname);
         return $fullName ?: $this->email;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProfiles()
+    {
+        return $this->hasMany(UserProfile::class,['user_id' => 'id']);
+    }
+
+    /**
+     * @return \common\models\UserProfile|null
+     */
+    public function getProfile(): ?UserProfile
+    {
+        $profile = $this->profiles[0] ?? new UserProfile();
+        $profile->user_id = $this->id;
+        return $profile;
     }
 }

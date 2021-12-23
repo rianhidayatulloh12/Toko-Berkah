@@ -22,6 +22,13 @@ use Yii;
  * @property int|null $created_at
  * @property int|null $created_by
  * @property int $status
+ *
+ * @property ItemPenjualan[] $itemPenjualans
+ * @property User $kasir
+ * @property User $kurir
+ * @property User $pengemas
+ * @property PenjualanDetail[] $penjualanDetails
+ * @property User $validatorPembayaran
  */
 class Penjualan extends \yii\db\ActiveRecord
 {
@@ -43,6 +50,10 @@ class Penjualan extends \yii\db\ActiveRecord
             [['tanggal', 'jam'], 'safe'],
             [['total', 'status_pengemasan', 'pengemas_id', 'status_pengiriman', 'kurir_id', 'kasir_id', 'status_pembayaran', 'validator_pembayaran', 'created_at', 'created_by', 'status'], 'integer'],
             [['uang_pembayaran'], 'number'],
+            [['kasir_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['kasir_id' => 'id']],
+            [['kurir_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['kurir_id' => 'id']],
+            [['pengemas_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['pengemas_id' => 'id']],
+            [['validator_pembayaran'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['validator_pembayaran' => 'id']],
         ];
     }
 
@@ -71,11 +82,71 @@ class Penjualan extends \yii\db\ActiveRecord
     }
 
     /**
+     * Gets query for [[ItemPenjualans]].
+     *
+     * @return \yii\db\ActiveQuery|ItemPenjualanQuery
+     */
+    public function getItemPenjualans()
+    {
+        return $this->hasMany(ItemPenjualan::className(), ['penjualan_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Kasir]].
+     *
+     * @return \yii\db\ActiveQuery|yii\db\ActiveQuery
+     */
+    public function getKasir()
+    {
+        return $this->hasOne(User::className(), ['id' => 'kasir_id']);
+    }
+
+    /**
+     * Gets query for [[Kurir]].
+     *
+     * @return \yii\db\ActiveQuery|yii\db\ActiveQuery
+     */
+    public function getKurir()
+    {
+        return $this->hasOne(User::className(), ['id' => 'kurir_id']);
+    }
+
+    /**
+     * Gets query for [[Pengemas]].
+     *
+     * @return \yii\db\ActiveQuery|yii\db\ActiveQuery
+     */
+    public function getPengemas()
+    {
+        return $this->hasOne(User::className(), ['id' => 'pengemas_id']);
+    }
+
+    /**
+     * Gets query for [[PenjualanDetails]].
+     *
+     * @return \yii\db\ActiveQuery|PenjualanDetailQuery
+     */
+    public function getPenjualanDetails()
+    {
+        return $this->hasMany(PenjualanDetail::className(), ['penjualan_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[ValidatorPembayaran]].
+     *
+     * @return \yii\db\ActiveQuery|yii\db\ActiveQuery
+     */
+    public function getValidatorPembayaran()
+    {
+        return $this->hasOne(User::className(), ['id' => 'validator_pembayaran']);
+    }
+
+    /**
      * {@inheritdoc}
-     * @return \common\models\query\PenjualanQuery the active query used by this AR class.
+     * @return PenjualanQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \common\models\query\PenjualanQuery(get_called_class());
+        return new PenjualanQuery(get_called_class());
     }
 }
