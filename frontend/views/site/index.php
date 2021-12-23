@@ -17,7 +17,7 @@ $this->title = 'My Yii Application';
     </header>
     <div class="body-content">
         <!-- Section-->
-        <section class="py-5">
+        <section class="py-3">
             <div class="container px-4 px-lg-5 mt-5">
 
                     <?php echo \yii\widgets\ListView::widget([
@@ -25,7 +25,7 @@ $this->title = 'My Yii Application';
                             'layout' => '{summary}<div class="row">{items}</div>{pager}',
                             'itemView' => '_item_barang',
                             'itemOptions' => [
-                                    'class' => 'col col-lg-3 mb-5'
+                                    'class' => 'col-lg-2 col-md-4 col-6 mb-2 item-barang'
                             ],
                             'pager' => [
                                     'class' => \yii\bootstrap4\LinkPager::class,
@@ -38,11 +38,6 @@ $this->title = 'My Yii Application';
         <footer class="py-5 bg-success">
             <div class="container"><p class="m-0 text-center text-white">Website Penjualan | Toko Berkah | Pemrograman Rian</p></div>
         </footer>
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
-        <script src="js/scripts.js"></script>
-
     </div>
 </div>
 
