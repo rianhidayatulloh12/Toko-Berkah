@@ -7,6 +7,7 @@
         <h4>Belanjaan Anda</h4>
     </div>
     <div class="card-body p-4">
+        <?php if (!empty($items)): ?>
         <table class="table table-hover">
             <thead>
             <tr class="text-success" align="center">
@@ -43,5 +44,10 @@
         <div class="card-body text-right">
             <a href="<?php echo \yii\helpers\Url::to(['/cart/checkout']) ?>"class="btn btn-success">Checkout</a>
         </div>
+        <?php else: ?>
+
+            <p class="text-muted text-center p-5"> Barang belanjaan tidak ada </p>
+
+        <?php endif; ?>
     </div>
 </div>
