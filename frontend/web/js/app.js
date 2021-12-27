@@ -1,6 +1,7 @@
 $(function(){
     const $cartJumlah = $('#cart-jumlah');
     const $addToCart = $('.btn-add-to-cart');
+    const $itemJumlah = $('.item-jumlah');
    $addToCart.click(ev => {
        ev.preventDefault();
        const $this = $(ev.target);
@@ -16,4 +17,18 @@ $(function(){
            }
        })
    })
+
+    $itemJumlah.change(ev => {
+        const $this = $(ev.target);
+        let $tr = $this.closest('tr');
+        const id = $tr.data('id');
+        $.ajax({
+            method: 'post',
+            url: $tr.data('url'),
+            data: {id, jumlah: $this.val()},
+            success: function (totalJumlah) {
+                $cartJumlah.text(totalJumlah)
+            }
+        })
+    })
 });

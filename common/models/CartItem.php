@@ -26,6 +26,22 @@ class CartItem extends \yii\db\ActiveRecord
         return '{{%cart_items}}';
     }
 
+    public static function getTotalJumlahForUser($curUserId)
+    {
+        if (isGuest()){
+            $cartItems= \Yii::$app->session->get(CartItem::SESSION_KEY, []);
+            $sum = 0;
+            foreach ($cartItems as $cartItem){
+                $sum += $cartItem['jumlah'];
+            }
+        }else{
+            $sum = CartItem::findBySql("
+            SELECT SUM(jumlah) FROM cart_items WHERE user_id = :userId", ['userId' => $curUserId])
+                ->scalar();
+        }
+        return $sum;
+    }
+
     /**
      * {@inheritdoc}
      */

@@ -21,15 +21,30 @@
             </thead>
             <tbody>
             <?php foreach ($items as $item): ?>
-                <tr align="center">
+                <tr align="center"
+                    data-id="<?php echo $item['id'] ?>"
+                    data-url="<?php echo \yii\helpers\Url::to(['/cart/change-jumlah']) ?>">
+
                     <td><?= $item['nama']?></td>
+
                     <td>
                         <img src="<?= \common\models\Barang::formatImageUrl($item['image'])?>"
-                             style="width: 60px" alt="<?php echo $item['nama']?>">
+                             style="width: 60px"
+                             alt="<?php echo $item['nama']?>">
                     </td>
+
                     <td><?= $item['harga_jual']?></td>
-                    <td><?= $item['jumlah']?></td>
+
+                    <td>
+                        <input type="number"
+                               min="1"
+                               class="form-control item-jumlah"
+                               style="width: 60px"
+                               value="<?= $item['jumlah']?>">
+                    </td>
+
                     <td><?= $item['total_harga']?></td>
+
                     <td>
                         <?= \yii\helpers\Html::a('Delete',['/cart/delete', 'id' => $item['id']],[
                                 'class' => 'btn btn-outline-danger btn-sm',
@@ -37,6 +52,7 @@
                                 'data-confirm' => 'Apakah anda yakin akan menghapus item ini?'
                         ])?>
                     </td>
+
                 </tr>
             <?php endforeach; ?>
             </tbody>

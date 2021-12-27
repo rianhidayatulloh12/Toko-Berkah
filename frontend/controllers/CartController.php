@@ -74,7 +74,7 @@ class CartController extends \frontend\base\Controller
     public function actionAdd()
     {
         $id = \Yii::$app->request->post('id');
-        $barang = Barang::find($id)->published()->one();
+        $barang = Barang::find()->id($id)->published()->one();
         if (!$barang){
             throw new NotFoundHttpException("Barang tidak ada");
         }
@@ -83,9 +83,9 @@ class CartController extends \frontend\base\Controller
 
             $cartItems = \Yii::$app->session->get(CartItem::SESSION_KEY, []);
             $found = false;
-            foreach ($cartItems as &$cartItem) {
-                if ($cartItem['id'] == $id){
-                    $cartItem['jumlah']++;
+            foreach ($cartItems as &$item) {
+                if ($item['id'] == $id){
+                    $item['jumlah']++;
                     $found = true;
                     break;
                 }
@@ -112,7 +112,7 @@ class CartController extends \frontend\base\Controller
             }else {
                 $cartItem = new CartItem();
                 $cartItem->barang_id = $id;
-                $cartItem->user_id = \Yii::$app->user->id;
+                $cartItem->user_id = $userId;
                 $cartItem->jumlah = 1;
             }
             if ($cartItem->save()){
@@ -146,5 +146,32 @@ class CartController extends \frontend\base\Controller
             CartItem::deleteAll(['barang_id' => $id, 'user_id' => currUserId()]);
         }
         return $this->redirect(['index']);
+    }
+
+    public function actionChangeJumlah()
+    {
+        $id = \Yii::$app->request->post('id');
+        $barang = Barang::find()->id($id)->published()->one();
+        if (!$barang){
+            throw new NotFoundHttpException("Barang tidak ada");
+        }
+        $jumlah = \Yii::$app->request->post('jumlah');
+        if (isGuest()){
+            $cartItems = \Yii::$app->session->get(CartItem::SESSION_KEY, []);
+            foreach ($cartItems as &$cartItem){
+                if ($cartItem['id'] === $id){
+                    $cartItem['jumlah'] = $jumlah;
+                    break;
+                }
+            }
+            \Yii::$app->session->set(CartItem::SESSION_KEY, $cartItems);
+        }else{
+            $cartItem = CartItem::find()->userId(currUserId())->barangId($id)->one();
+            if ($cartItem) {
+                $cartItem->jumlah = $jumlah;
+                $cartItem->save();
+            }
+        }
+        return CartItem::getTotalJumlahForUser(currUserId());
     }
 }
