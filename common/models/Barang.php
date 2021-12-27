@@ -63,6 +63,8 @@ class Barang extends \yii\db\ActiveRecord
             [['deskripsi'], 'string'],
             [['sku', 'upc', 'nama', 'jenis', 'merk', 'satuan'], 'string', 'max' => 255],
             [['image'], 'string', 'max' => 2000],
+            [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
+            [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updated_by' => 'id']],
         ];
     }
 
