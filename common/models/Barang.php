@@ -26,6 +26,10 @@ use yii\helpers\FileHelper;
  * @property int|null $updated_by
  * @property string|null $image
  * @property string $deskripsi
+ *
+ * @property cartItem[] $cartItems
+ * @property User        $createdBy
+ * @property User        $updatedBy
  */
 class Barang extends \yii\db\ActiveRecord
 {
@@ -138,6 +142,26 @@ class Barang extends \yii\db\ActiveRecord
             return Yii::$app->params['frontendUrl'] . '/storage' . $imagePath;
         }
         return Yii::$app->params['frontendUrl'].'/img/no_image.png';
+    }
+
+    /**
+     * Gets query for [[CreatedBy]].
+     *
+     * @return \yii\db\ActiveQuery|\common\models\query\UserQuery
+     */
+    public function getCreatedBy()
+    {
+        return $this->hasOne(User::className(), ['id' => 'created_by']);
+    }
+
+    /**
+     * Gets query for [[UpdatedBy]].
+     *
+     * @return \yii\db\ActiveQuery|\common\models\query\UserQuery
+     */
+    public function getUpdatedBy()
+    {
+        return $this->hasOne(User::className(), ['id' => 'updated_by']);
     }
 
 }

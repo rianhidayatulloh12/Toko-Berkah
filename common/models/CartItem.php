@@ -42,6 +42,43 @@ class CartItem extends \yii\db\ActiveRecord
         return $sum;
     }
 
+    public static function getTotalHargaForUser($curUserId)
+    {
+        if (isGuest()){
+            $cartItems= \Yii::$app->session->get(CartItem::SESSION_KEY, []);
+            $sum = 0;
+            foreach ($cartItems as $cartItem){
+                $sum += $cartItem['jumlah'] * $cartItem['harga_jual'];
+            }
+        }else{
+            $sum = CartItem::findBySql("
+            SELECT SUM(c.jumlah * b.harga_jual) 
+            FROM cart_items c
+            LEFT JOIN barang b on b.id = c.barang_id 
+                WHERE c.user_id = :userId", ['userId' => $curUserId])
+                ->scalar();
+        }
+        return $sum;
+    }
+
+    public static function getItemsForUser($currUserId)
+    {
+        return CartItem::findBySql("
+                            SELECT
+                                   c.barang_id as id,
+                                   b.image,
+                                   b.nama,
+                                   b.harga_jual,
+                                   c.jumlah,
+                                   b.harga_jual * c.jumlah as total_harga
+                            FROM cart_items c
+                                    LEFT JOIN barang b on b.id = c.barang_id
+                            WHERE c.user_id = :userId",
+            ['userId' => $currUserId])
+            ->asArray()
+            ->all();
+    }
+
     /**
      * {@inheritdoc}
      */

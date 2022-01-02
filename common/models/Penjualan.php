@@ -8,21 +8,24 @@ use Yii;
  * This is the model class for table "{{%penjualan}}".
  *
  * @property int $id
- * @property string $tanggal
- * @property string $jam
- * @property int $total
- * @property float $uang_pembayaran
- * @property int $status_pengemasan
- * @property int $pengemas_id
- * @property int $status_pengiriman
- * @property int $kurir_id
- * @property int $kasir_id
- * @property int $status_pembayaran
- * @property int $validator_pembayaran
+ * @property string|null $firstname
+ * @property string|null $lastname
+ * @property string|null $tanggal
+ * @property string|null $jam
+ * @property int|null $total
+ * @property float|null $uang_pembayaran
+ * @property int|null $status_pengemasan
+ * @property int|null $pengemas_id
+ * @property int|null $status_pengiriman
+ * @property int|null $kurir_id
+ * @property int|null $kasir_id
+ * @property int|null $status_pembayaran
+ * @property int|null $validator_pembayaran
  * @property int|null $created_at
  * @property int|null $created_by
  * @property int $status
  *
+ * @property User $createdBy
  * @property ItemPenjualan[] $itemPenjualans
  * @property User $kasir
  * @property User $kurir
@@ -32,6 +35,7 @@ use Yii;
  */
 class Penjualan extends \yii\db\ActiveRecord
 {
+    const STATUS_DRAFT = 0;
     /**
      * {@inheritdoc}
      */
@@ -46,14 +50,16 @@ class Penjualan extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['tanggal', 'jam', 'total', 'uang_pembayaran', 'status_pengemasan', 'pengemas_id', 'status_pengiriman', 'kurir_id', 'kasir_id', 'status_pembayaran', 'validator_pembayaran', 'status'], 'required'],
             [['tanggal', 'jam'], 'safe'],
             [['total', 'status_pengemasan', 'pengemas_id', 'status_pengiriman', 'kurir_id', 'kasir_id', 'status_pembayaran', 'validator_pembayaran', 'created_at', 'created_by', 'status'], 'integer'],
             [['uang_pembayaran'], 'number'],
+            [['status', 'firstname', 'lastname'], 'required'],
+            [['firstname', 'lastname'], 'string', 'max' => 255],
             [['kasir_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['kasir_id' => 'id']],
             [['kurir_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['kurir_id' => 'id']],
             [['pengemas_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['pengemas_id' => 'id']],
             [['validator_pembayaran'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['validator_pembayaran' => 'id']],
+            [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
         ];
     }
 
@@ -64,6 +70,8 @@ class Penjualan extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'firstname' => 'Firstname',
+            'lastname' => 'Lastname',
             'tanggal' => 'Tanggal',
             'jam' => 'Jam',
             'total' => 'Total',
@@ -79,6 +87,16 @@ class Penjualan extends \yii\db\ActiveRecord
             'created_by' => 'Created By',
             'status' => 'Status',
         ];
+    }
+
+    /**
+     * Gets query for [[CreatedBy]].
+     *
+     * @return \yii\db\ActiveQuery|yii\db\ActiveQuery
+     */
+    public function getCreatedBy()
+    {
+        return $this->hasOne(User::className(), ['id' => 'created_by']);
     }
 
     /**

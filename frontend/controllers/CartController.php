@@ -6,6 +6,9 @@ namespace frontend\controllers;
 
 use common\models\Barang;
 use common\models\CartItem;
+use common\models\Penjualan;
+use common\models\PenjualanDetail;
+use common\models\User;
 use yii\filters\ContentNegotiator;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -42,21 +45,7 @@ class CartController extends \frontend\base\Controller
         if (\Yii::$app->user->isGuest){
             $cartItems = \Yii::$app->session->get(CartItem::SESSION_KEY, []);
         }else{
-            $cartItems = CartItem::findBySql("
-                            SELECT
-                                   c.barang_id as id,
-                                   b.image,
-                                   b.nama,
-                                   b.harga_jual,
-                                   c.jumlah,
-                                   b.harga_jual * c.jumlah as total_harga
-                            FROM cart_items c
-                                    LEFT JOIN barang b on b.id = c.barang_id
-                            WHERE c.user_id = :userId",
-                ['userId' => \Yii::$app->user->id
-                ])
-                ->asArray()
-                ->all();
+            $cartItems = CartItem::getItemsForUser(currUserId());
 
         }
 
@@ -173,5 +162,40 @@ class CartController extends \frontend\base\Controller
             }
         }
         return CartItem::getTotalJumlahForUser(currUserId());
+    }
+
+    public function actionCheckout()
+    {
+        $penjualan = new Penjualan();
+        $penjualanDetail = new PenjualanDetail();
+        if(!isGuest()){
+            /** @var \common\models\User $user */
+            $user = \Yii::$app->user->identity;
+            $userProfile = $user->getProfile();
+
+            $penjualan->firstname = $user->firstname;
+            $penjualan->lastname = $user->lastname;
+            $penjualan->status = Penjualan::STATUS_DRAFT;
+
+            $penjualanDetail->alamat = $userProfile->alamat;
+            $penjualanDetail->kelurahan = $userProfile->kelurahan;
+            $penjualanDetail->kecamatan = $userProfile->kecamatan;
+            $penjualanDetail->kabupaten = $userProfile->kabupaten;
+            $penjualanDetail->provinsi = $userProfile->provinsi;
+            $cartItems = CartItem::getItemsForUser(currUserId());
+        } else {
+            $cartItems = \Yii::$app->session->get(CartItem::SESSION_KEY, []);
+        }
+
+        $jumlahBarang = CartItem::getTotalJumlahForUser(currUserId());
+        $totalHarga = CartItem::getTotalHargaForUser(currUserId());
+
+        return $this->render('checkout', [
+            'penjualan' => $penjualan,
+            'penjualanDetail' => $penjualanDetail,
+            'cartItems' => $cartItems,
+            'jumlahBarang' => $jumlahBarang,
+            'totalHarga' => $totalHarga
+        ]);
     }
 }

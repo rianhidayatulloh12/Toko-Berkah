@@ -43,7 +43,7 @@
                                value="<?= $item['jumlah']?>">
                     </td>
 
-                    <td><?= $item['total_harga']?></td>
+                    <td><?= Yii::$app->formatter->asCurrency($item['total_harga'])?></td>
 
                     <td>
                         <?= \yii\helpers\Html::a('Delete',['/cart/delete', 'id' => $item['id']],[

@@ -47,14 +47,14 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                     'attribute' => 'status',
                     'format' => ['html'],
-                    'value' => fn() => Html::tag('span', $model->status ? 'Active' : 'Draft', [
+                    'value' => fn() => Html::tag('span', $model->status ? '' : 'Draft', [
                             'class' => $model->status ? 'badge badge-success' : 'badge badge-danger'
                     ])
             ],
             'created_at:datetime',
             'updated_at:datetime',
-            'created_by',
-            'updated_by',
+            'createdBy.username',
+            'updatedBy.username',
         ],
     ]) ?>
 
